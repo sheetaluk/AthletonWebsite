@@ -33,7 +33,7 @@
   function hideConsent(){ var b=document.getElementById('consent'); if(b) b.style.display='none'; }
   function acceptConsent(){ setConsent('accepted'); loadKlaviyo(); hideConsent(); }
   function declineConsent(){ setConsent('declined'); hideConsent(); }
-  (function(){ var c=getConsent(); if(c==='accepted'){ loadKlaviyo(); } else if(c!=='declined'){ var b=document.getElementById('consent'); if(b) b.style.display='flex'; } })();
+  (function(){ if(getConsent()==='accepted'){ loadKlaviyo(); } })();
 </script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Fredoka:wght@500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
@@ -224,6 +224,11 @@
   .form input{flex:1;min-width:220px;font-family:'Hanken Grotesk';font-size:16px;padding:15px 20px;border:1.5px solid rgba(38,32,28,.25);border-radius:999px;outline:none}
   .form input:focus{box-shadow:0 0 0 3px var(--pink)}
   .form .btn-ink{background:var(--ink);color:#fff}
+  .optin{display:flex;flex-direction:column;gap:9px;max-width:430px;margin:16px auto 0;font-family:'Hanken Grotesk';font-size:13.5px;line-height:1.5;color:var(--ink);text-align:left}
+  .optin-choices{display:flex;gap:22px}
+  .optin-choices label{display:flex;align-items:center;gap:7px;cursor:pointer;font-weight:600}
+  .optin-choices input{width:17px;height:17px;accent-color:var(--pink);cursor:pointer}
+  .optin a{color:var(--pink);text-decoration:underline}
   .thanks{display:none;font-family:'Fraunces';font-weight:900;font-size:24px;color:var(--pink);margin-top:14px}
   footer{background:var(--ink);color:var(--cream);padding:46px 30px 32px;text-align:center}
   footer .flogo{font-family:'Fraunces';font-weight:900;font-size:30px;color:var(--teal)}
@@ -438,6 +443,13 @@
         <input type="email" id="email" placeholder="your@email.com" aria-label="Email address" />
         <button class="btn btn-ink" onclick="joinList()">Count me in</button>
       </div>
+      <div class="optin reveal" id="optinLabel" role="radiogroup" aria-label="Email and updates preference">
+        <span class="optin-q">Be the first to know. <a href="privacy.html">We'll never sell your data.</a></span>
+        <span class="optin-choices">
+          <label><input type="radio" name="optin" value="yes" checked /> Yes please</label>
+          <label><input type="radio" name="optin" value="no" /> No thanks</label>
+        </span>
+      </div>
       <div class="thanks" id="thanks">You're on the list!</div>
     </div>
   </section>
@@ -449,13 +461,7 @@
     <div class="flinks"><a href="privacy.html">Privacy Policy</a></div>
     <div class="fine">Product of USA. &copy; Athleton.</div>
   </footer>
-  <div id="consent" class="consent" role="dialog" aria-label="Cookie preferences" style="display:none">
-    <div class="consent-text">We use a couple of cookies to see what's landing and keep our launch updates relevant to you. Okay with you? You can change your mind anytime, and the site works either way. <a href="privacy.html">See our privacy policy</a>.</div>
-    <div class="consent-btns">
-      <button class="cbtn cbtn-no" onclick="declineConsent()">No thanks</button>
-      <button class="cbtn cbtn-yes" onclick="acceptConsent()">Sounds good</button>
-    </div>
-  </div>
+
 <script>
   /* ---- Klaviyo waitlist setup (fill these two in) ----
      KLAVIYO_PUBLIC_KEY: your 6-character public key / "site ID".
@@ -487,6 +493,9 @@
     var email=(e.value||'').trim();
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ e.focus(); e.style.boxShadow='0 0 0 3px #E6116F'; return; }
     e.style.boxShadow='none';
+    var choice=document.querySelector('input[name="optin"]:checked');
+    var consentVal=(choice && choice.value==='yes')?'yes':'no';
+    if(consentVal==='yes'){ setConsent('accepted'); loadKlaviyo(); } else { setConsent('declined'); }
     var btn=document.querySelector('.form .btn-ink'); if(btn){btn.disabled=true; btn.textContent='Joining...';}
     if(KLAVIYO_PUBLIC_KEY==='YOUR_PUBLIC_KEY' || KLAVIYO_LIST_ID==='YOUR_LIST_ID'){
       console.warn('Klaviyo not configured yet: set KLAVIYO_PUBLIC_KEY and KLAVIYO_LIST_ID in the script.');
@@ -495,7 +504,7 @@
     fetch('https://a.klaviyo.com/client/subscriptions/?company_id='+encodeURIComponent(KLAVIYO_PUBLIC_KEY),{
       method:'POST',
       headers:{'Content-Type':'application/json','revision':'2024-10-15'},
-      body:JSON.stringify({data:{type:'subscription',attributes:{profile:{data:{type:'profile',attributes:{email:email}}}},relationships:{list:{data:{type:'list',id:KLAVIYO_LIST_ID}}}}})
+      body:JSON.stringify({data:{type:'subscription',attributes:{custom_source:'Pre-launch waitlist',profile:{data:{type:'profile',attributes:{email:email,properties:{'Marketing Consent':consentVal,'Consent Source':'Pre-launch waitlist','Consent Date':new Date().toISOString()}}}}},relationships:{list:{data:{type:'list',id:KLAVIYO_LIST_ID}}}}})
     }).then(function(r){ if(r.ok||r.status===202){ trackJoin(email); showThanks(); } else { console.error('Klaviyo responded with status', r.status); failJoin(btn); } })
       .catch(function(err){ console.error('Klaviyo request failed (this is expected when testing from a local file, not a live https site):', err); failJoin(btn); });
   }
