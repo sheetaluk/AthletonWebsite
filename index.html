@@ -49,8 +49,9 @@
   .fred{font-family:'Fredoka',sans-serif}
   .ticks{height:16px;background:repeating-linear-gradient(90deg,var(--ink) 0,var(--ink) var(--stripe-w),var(--white) var(--stripe-w),var(--white) calc(var(--stripe-w)*2));border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
   .ticks.slim{height:13px;border-width:2px}
-  nav{position:sticky;top:0;z-index:60;background:var(--cream);display:flex;align-items:center;justify-content:space-between;padding:16px 30px;border-bottom:1px solid rgba(38,32,28,.12)}
-  .logo{font-family:'Fraunces';font-weight:900;font-size:26px;letter-spacing:0.04em;color:var(--pink)}
+  .topbar{position:sticky;top:0;z-index:60}
+  nav{background:var(--cream);display:flex;align-items:center;justify-content:space-between;padding:16px 30px;border-bottom:1px solid rgba(38,32,28,.12)}
+  .logo{font-family:'Fraunces';font-weight:900;font-size:26px;letter-spacing:0.04em;color:var(--teal)}
   .tm{font-size:.42em;vertical-align:super;font-weight:700;margin-left:1px}
   .navlinks{display:flex;gap:22px;align-items:center}
   .navlinks a{color:var(--ink);text-decoration:none;font-weight:600;font-size:15px}
@@ -250,12 +251,12 @@
   .cbtn-no{background:transparent;color:var(--cream);border:1.5px solid rgba(255,255,255,.38)}
   .cbtn-yes{background:var(--teal);color:var(--ink)}
   footer .flinks{margin:16px 0 4px}
-  footer .flinks a{color:var(--teal);text-decoration:none;font-weight:600;font-size:13px}
+  footer .flinks a{color:var(--pink);text-decoration:none;font-weight:600;font-size:13px}
   footer .flinks a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
-  <div class="ticks" role="presentation"></div>
+  <div class="topbar">
   <nav>
     <div class="logo">Athleton<span class="tm">&#8482;</span></div>
     <div class="navlinks">
@@ -266,6 +267,8 @@
       <a href="#waitlist" class="navcta">Early Access</a>
     </div>
   </nav>
+  <div class="ticks" role="presentation"></div>
+  </div>
   <header class="hero">
     <div class="blob blob1" aria-hidden="true"></div>
     <div class="blob blob2" aria-hidden="true"></div>
