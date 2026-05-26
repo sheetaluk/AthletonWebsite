@@ -474,6 +474,7 @@
 
   function showThanks(){
     document.querySelector('.form').style.display='none';
+    var o=document.getElementById('optinLabel'); if(o) o.style.display='none';
     var t=document.getElementById('thanks'); t.style.display='block';
   }
   function failJoin(btn){
