@@ -720,13 +720,8 @@
         type:'subscription',
         attributes:{
           custom_source:'Pre-launch waitlist',
-          subscriptions:{email:{marketing:{consent:'SUBSCRIBED'}}},
           profile:{data:{type:'profile',attributes:{
-            email:email,
-            properties:{
-              'Consent Source':'Pre-launch waitlist',
-              'Consent Date':new Date().toISOString()
-            }
+            email:email
           }}}
         },
         relationships:{list:{data:{type:'list',id:KLAVIYO_LIST_ID}}}
