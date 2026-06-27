@@ -692,15 +692,20 @@
   }
 
   function showThanks(form){
-    form.style.display='none';
-    var notes=form.parentElement.querySelectorAll('.form-note');
-    notes.forEach(function(n){ n.style.display='none'; });
+    var input=form.querySelector('input[type="email"]');
+    if(input){ input.value=''; }
+    var btn=form.querySelector('button');
+    if(btn){ btn.disabled=false; btn.textContent='Get Early Access'; }
     var s=form.parentElement.querySelector('.form-success');
-    if(s){ s.style.display='block'; } else {
+    if(s){
+      s.style.display='block';
+      setTimeout(function(){ s.style.display='none'; }, 4000);
+    } else {
       var p=document.createElement('p');
       p.textContent="You're on the list. Hydrate or perish. 🌵";
       p.style.cssText='color:#0E8A92;font-size:.95rem;font-weight:500;letter-spacing:.04em;margin-top:8px;';
       form.parentElement.appendChild(p);
+      setTimeout(function(){ p.remove(); }, 4000);
     }
   }
 
