@@ -716,18 +716,21 @@
     fetch('https://a.klaviyo.com/client/subscriptions/?company_id='+encodeURIComponent(KLAVIYO_PUBLIC_KEY),{
       method:'POST',
       headers:{'Content-Type':'application/vnd.api+json','revision':'2024-10-15'},
-      body:JSON.stringify({data:{type:'subscription',attributes:{
-        custom_source:'Pre-launch waitlist',
-        profile:{data:{type:'profile',attributes:{
-          email:email,
-          subscriptions:{email:{marketing:{consent:'SUBSCRIBED'}}},
-          properties:{
-            'Consent Source':'Pre-launch waitlist',
-            'Consent Date':new Date().toISOString()
-          }
-        }}},
+      body:JSON.stringify({data:{
+        type:'subscription',
+        attributes:{
+          custom_source:'Pre-launch waitlist',
+          profile:{data:{type:'profile',attributes:{
+            email:email,
+            subscriptions:{email:{marketing:{consent:'SUBSCRIBED'}}},
+            properties:{
+              'Consent Source':'Pre-launch waitlist',
+              'Consent Date':new Date().toISOString()
+            }
+          }}}
+        },
         relationships:{list:{data:{type:'list',id:KLAVIYO_LIST_ID}}}
-      }}})
+      }})
     }).then(function(r){
       if(r.ok||r.status===202){ showThanks(form); }
       else { if(btn){ btn.disabled=false; btn.textContent='Get Early Access'; } }
