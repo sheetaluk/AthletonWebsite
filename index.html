@@ -27,7 +27,8 @@
     --stripe-w: 22px;
   }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  #waitlist { scroll-margin-top: 80px; }
 
   body {
     font-family: 'Inter', sans-serif;
@@ -508,7 +509,8 @@
     <p class="hero-tagline">Radically clean electrolyte hydration.<br>Every ingredient you can pronounce.</p>
 
     <!-- WAITLIST -->
-    <div id="waitlist">
+    <div>
+      <a id="waitlist" style="display:block;position:relative;top:-80px;visibility:hidden"></a>
       <form class="waitlist-form" onsubmit="handleSubmit(event)">
         <input type="email" id="email-input" placeholder="your@email.com" required autocomplete="email">
         <button type="submit">Get Early Access</button>
@@ -713,14 +715,17 @@
     loadKlaviyo();
     fetch('https://a.klaviyo.com/client/subscriptions/?company_id='+encodeURIComponent(KLAVIYO_PUBLIC_KEY),{
       method:'POST',
-      headers:{'Content-Type':'application/json','revision':'2024-10-15'},
+      headers:{'Content-Type':'application/vnd.api+json','revision':'2024-10-15'},
       body:JSON.stringify({data:{type:'subscription',attributes:{
         custom_source:'Pre-launch waitlist',
-        profile:{data:{type:'profile',attributes:{email:email,properties:{
-          'Marketing Consent':'yes',
-          'Consent Source':'Pre-launch waitlist',
-          'Consent Date':new Date().toISOString()
-        }}}},
+        profile:{data:{type:'profile',attributes:{
+          email:email,
+          subscriptions:{email:{marketing:{consent:'SUBSCRIBED'}}},
+          properties:{
+            'Consent Source':'Pre-launch waitlist',
+            'Consent Date':new Date().toISOString()
+          }
+        }}},
         relationships:{list:{data:{type:'list',id:KLAVIYO_LIST_ID}}}
       }}})
     }).then(function(r){
