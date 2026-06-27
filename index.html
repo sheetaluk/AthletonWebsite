@@ -720,9 +720,9 @@
         type:'subscription',
         attributes:{
           custom_source:'Pre-launch waitlist',
+          subscriptions:{email:{marketing:{consent:'SUBSCRIBED'}}},
           profile:{data:{type:'profile',attributes:{
             email:email,
-            subscriptions:{email:{marketing:{consent:'SUBSCRIBED'}}},
             properties:{
               'Consent Source':'Pre-launch waitlist',
               'Consent Date':new Date().toISOString()
